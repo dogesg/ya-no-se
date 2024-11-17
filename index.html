@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Random Mejorada</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .panel {
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #ffffff;
+            max-width: 600px;
+        }
+
+        .domain-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .domain-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #6200ea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+        }
+
+        button:hover {
+            background-color: #3700b3;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Página Random Mejorada</h1>
+    <div class="panel">
+        <h2>Selecciona los dominios:</h2>
+        <div class="domain-list">
+            <div class="domain-item">
+                <input type="checkbox" id="domain-io" value=".io" checked>
+                <label for="domain-io">.io</label>
+            </div>
+            <div class="domain-item">
+                <input type="checkbox" id="domain-is" value=".is" checked>
+                <label for="domain-is">.is</label>
+            </div>
+            <div class="domain-item">
+                <input type="checkbox" id="domain-net" value=".net">
+                <label for="domain-net">.net</label>
+            </div>
+            <div class="domain-item">
+                <input type="checkbox" id="domain-forum" value=".forum">
+                <label for="domain-forum">.forum</label>
+            </div>
+            <div class="domain-item">
+                <input type="checkbox" id="domain-dev" value=".dev">
+                <label for="domain-dev">.dev</label>
+            </div>
+            <!-- Añadir más dominios según sea necesario -->
+        </div>
+
+        <h2>¿Cuántas páginas válidas deseas abrir?</h2>
+        <input type="number" id="page-count" placeholder="Introduce un número" min="1">
+
+        <button onclick="startSearch()">Iniciar búsqueda</button>
+    </div>
+
+    <script>
+        async function startSearch() {
+            const consonants = 'bcdfghjklmnpqrstvwxyz';
+            const vowels = 'aeiou';
+            const selectedDomains = Array.from(document.querySelectorAll('.domain-item input:checked')).map(input => input.value);
+            const pageCount = parseInt(document.getElementById('page-count').value);
+
+            if (!pageCount || pageCount <= 0) {
+                alert("Por favor, introduce un número válido de páginas a abrir.");
+                return;
+            }
+
+            if (selectedDomains.length === 0) {
+                alert("Por favor, selecciona al menos un dominio.");
+                return;
+            }
+
+            let pagesOpened = 0;
+
+            while (pagesOpened < pageCount) {
+                let randomString = '';
+                for (let i = 0; i < 6; i++) {
+                    if (i % 2 === 0) {
+                        randomString += consonants[Math.floor(Math.random() * consonants.length)];
+                    } else {
+                        randomString += vowels[Math.floor(Math.random() * vowels.length)];
+                    }
+                }
+
+                const randomDomain = selectedDomains[Math.floor(Math.random() * selectedDomains.length)];
+                const randomUrl = `https://www.${randomString}${randomDomain}`;
+
+                try {
+                    const response = await fetch(randomUrl, { mode: 'no-cors' });
+                    window.open(randomUrl, '_blank');
+                    pagesOpened++;
+                } catch (error) {
+                    console.log(`Falló: ${randomUrl}, intentando de nuevo...`);
+                }
+            }
+
+            alert(`${pagesOpened} páginas válidas abiertas.`);
+        }
+    </script>
+</body>
+</html>
